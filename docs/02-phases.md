@@ -58,12 +58,12 @@ Domains: [production](../domains/production.md), [orders](../domains/orders.md) 
 
 ## P3 · Collect
 
-**Exit criterion:** the buyer opens their album on their phone, sees their poster with depth and holographic effect, and sees the season grid with the gaps.
+**Exit criterion:** the buyer opens their album on their phone, sees their poster with depth and holographic effect, and sees the season grid with placeholders for the missing pieces.
 
 Includes:
 
 - Digital album: layers, holographic shader, device orientation.
-- Season grid with visible gaps.
+- Season grid with placeholders for the missing pieces.
 
 Does not block launch. Codes are issued from drop one; the album can arrive at drop six without losing anything.
 

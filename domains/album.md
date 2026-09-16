@@ -6,15 +6,15 @@
 
 ## Purpose
 
-Turn the collection into something people want to open. The poster on the phone, with depth and holographic effect, and the season grid with the gaps that push toward the next drop.
+Turn the collection into something people want to open. The poster on the phone, with depth and holographic effect, and the season grid with placeholders that point to the next drop.
 
 ## The three effects
 
 | Effect | What it is | How it is achieved |
 |---|---|---|
 | **Depth** | The poster in layers (background, circuit, figure) that move when the phone tilts | Each piece is delivered in separate layers. Parallax driven by device orientation |
-| **Holographic** | Shader that reacts to device orientation. It is what makes it feel like chrome | Custom shader on the top layer, fed by Device Orientation |
-| **Grid** | The full season with visible gaps. The gap is what pushes toward the next drop | Season view with fixed positions; unredeemed ones are shown empty or as silhouettes |
+| **Holographic** | Shader that reacts to device orientation. This is what makes it feel like chrome | Custom shader on the top layer, fed by Device Orientation |
+| **Grid** | The full season, with a placeholder in every slot the buyer has not filled. The placeholder is what pushes toward the next drop | Season view with fixed positions; unredeemed slots show an empty frame with the next drop's date or a "next art" teaser |
 
 ## Stack
 
@@ -26,8 +26,8 @@ There is no native app. Everything runs in the phone's browser. See [tech/stack.
 
 - Render a redeemed piece with its layers and the shader.
 - Respond to device orientation (and to the mouse on desktop as a fallback).
-- Show the season grid with gaps.
-- Link each gap to the corresponding drop (if it already came out, to the store; if not, to the landing with a date).
+- Show the season grid with placeholders.
+- Link each placeholder to the corresponding drop (if it already came out, to the store; if not, to the landing with a date).
 
 ## What the album does not do
 
@@ -52,7 +52,7 @@ If a piece has no layers, the album shows it flat. Nothing is blocked.
 
 - [ ] A buyer opens a redeemed piece on iOS and Android and sees depth and holographic effect when tilting the phone.
 - [ ] On desktop, the piece responds to the mouse.
-- [ ] The grid shows redeemed pieces and gaps, and each gap links to its drop.
+- [ ] The grid shows redeemed pieces and placeholders, and each placeholder links to its drop.
 - [ ] A piece without layers is shown flat without error.
 - [ ] The album loads in under three seconds on an average mobile connection.
 

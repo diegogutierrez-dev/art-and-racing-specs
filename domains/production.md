@@ -10,7 +10,7 @@ The internal view where the production team marks states 03, 04, and 05 of the [
 
 ## Who uses it
 
-The production team. Not the buyer, and not developers day to day. It is the only interface production needs; if they need something more, it gets added here, not in another tool.
+The production team. It is the only interface production needs; if they need something more, it gets added here.
 
 ## Responsibilities
 
@@ -25,7 +25,7 @@ The production team. Not the buyer, and not developers day to day. It is the onl
 
 ## What the panel does NOT have
 
-- **Payment data.** No card, no account, no detailed method. Total amount as text and nothing more.
+- **Payment data.** No card, no account, no detailed method. Only the total amount, as text.
 - **Dashboards or charts.** If production needs a report, the table gets exported.
 - **Editing the commercial order.** Items, address, and amount are edited in Shopify, not here.
 - **Code management.** Codes are visible tied to the order, but they are not edited from the panel.

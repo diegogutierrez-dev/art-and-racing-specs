@@ -1,6 +1,6 @@
 # Tech stack · advice
 
-> This is guidance, not a spec. Specs describe behavior and domain; the stack is the means and can change without anything in [domains/](../domains/) changing. If something here contradicts a spec, the spec wins.
+> This is guidance. Specs describe behavior and domain; the stack is the means and can change without anything in [domains/](../domains/) changing. If something here contradicts a spec, the spec wins.
 
 ## Summary
 
@@ -13,7 +13,7 @@
 | Transactional email | Resend (via Marketplace) with React Email templates | Five emails per order, fired by event |
 | Store | Shopify Basic | Catalog, checkout, taxes. See [store.md](../domains/store.md) |
 | Buyer auth | Depends on [decision 0002](../decisions/0002-user-identity.md) | Shopify Customer Account API, or Better Auth / Clerk with magic link |
-| Production auth | Separate from the buyer's. Clerk or Better Auth with roles | Never the same table as the buyer |
+| Production auth | Separate from the buyer's. Clerk or Better Auth with roles | A different table from the buyer's |
 | Album assets | Vercel Blob | Layers per piece, served with long cache |
 | 3D and shaders | Three.js via react-three-fiber + drei | P3 only. Lazy loaded on the album route |
 | Configuration | `vercel.ts` with `@vercel/config` | Typed, crons and headers in a single file |
@@ -96,7 +96,7 @@ For the sender, own domain verified in Resend before drop one.
 
 - Redemption endpoint as an authenticated Server Action or Route Handler.
 - Rate limit per account and per IP. Vercel Firewall with a rate limit rule on the redemption route, or Upstash Redis via Marketplace if custom logic is wanted.
-- BotID on the redemption form if abuse shows up. Not before.
+- BotID on the redemption form only if abuse shows up.
 - The code never travels in a query string in email links; the QR points to `/redeem?c=CODE` and the page reads it server-side and passes it to the form.
 
 ## Detecting *delivered*

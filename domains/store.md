@@ -21,7 +21,7 @@ Where the transaction happens. Shopify handles catalog, cart, checkout, taxes, a
 
 - Production states. Shopify has its own concept of *fulfillment*, but the state lifecycle lives in the platform. See [orders.md](orders.md).
 - Codes or collection. Shopify does not know they exist.
-- Narrative. The store sells; the landing tells.
+- Narrative. That is the landing's job.
 
 ## Rules
 

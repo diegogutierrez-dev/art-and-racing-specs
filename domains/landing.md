@@ -26,12 +26,12 @@ The landing has to do three different jobs with a single design. If it only tell
 
 - Full catalog or cart. That is the store.
 - Authentication. The landing links to the account; the platform authenticates.
-- Long editorial content. A landing, not a blog.
+- Long editorial content.
 
 ## Rules
 
 1. **One click to the product.** From any view on the landing, the current drop's product is one click away. Checkout, two.
-2. **Email capture blocks nothing.** It is an invitation, not a wall.
+2. **Email capture blocks nothing.** The visitor can skip it and keep going.
 3. **The current drop is dynamic.** No deployment is needed to change drops. The current drop is defined by data (publication date, product state in Shopify, or a field in the platform).
 4. **Same session.** If the buyer has a session on the platform, the landing knows it and shows their account access, not the sign-in button.
 

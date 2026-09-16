@@ -20,7 +20,7 @@
 
 ## Realistic floor
 
-**70 to 120 USD/month in infrastructure, plus 4% to 6% of every sale.**
+70 to 120 USD/month in infrastructure, plus 4% to 6% of every sale.
 
 Initial development is separate and one time.
 

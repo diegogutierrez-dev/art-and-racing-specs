@@ -18,7 +18,7 @@ The system is made of three pieces that the buyer goes through in order. Each on
 
 ### Level 1 · Landing
 
-The entry point. Not a brochure.
+The entry point.
 
 - Narrative and drops
 - Email capture
@@ -59,7 +59,7 @@ The buyer goes through the three pieces in a single session and should never fee
 
 ### The only mandatory integration point
 
-**The Shopify order webhook is the only mandatory integration point of phase one.** Everything else can come later.
+The Shopify order webhook is the only mandatory integration point of phase one. Everything else can come later.
 
 ```
 Shopify ──(orders/paid)──▶ Platform
@@ -90,7 +90,7 @@ That gives two deployments in total:
 6. Production moves the order through its states. Every change reaches them by email.
 7. Receives the poster with the printed code.
 8. Scans or enters the code in their account. The poster appears in their collection.
-9. Sees the season grid, with the gaps that are missing.
+9. Sees the season grid, with placeholders for the pieces they do not have yet.
 10. Comes back to the landing for the next drop.
 
 ## Open questions

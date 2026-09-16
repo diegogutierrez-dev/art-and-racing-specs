@@ -34,7 +34,7 @@ This means:
 
 ## Why it is written down
 
-This line exists so that everyone on the team knows which problems are solved with code and which are solved on the production floor. A lost order is not a bug. A wrong state in the panel is.
+This line exists so that everyone on the team knows which problems are solved with code and which are solved on the production floor. A lost order goes to production. A wrong state in the panel goes to development.
 
 ## Open questions
 

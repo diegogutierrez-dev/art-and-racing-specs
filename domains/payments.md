@@ -72,7 +72,7 @@ This is a sub-decision of [decision 0001](../decisions/0001-payment-gateway-and-
 Regardless of the route:
 
 1. **The platform never touches payment data.** It does not store cards, does not process charges, does not see account numbers. All of that lives in Shopify and the gateway.
-2. **The production panel has no access to payment data.** It sees total amount and method as text, nothing more.
+2. **The production panel has no access to payment data.** It sees the total amount and the method as text.
 3. **The amount is stored in the transaction's currency**, with the currency explicit. It is not converted.
 
 ## Acceptance criteria (P1)

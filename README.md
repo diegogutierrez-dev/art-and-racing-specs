@@ -39,7 +39,7 @@ Architecture decisions that define scope live in [decisions/](decisions/) as ADR
 
 ## Tech stack
 
-[tech/stack.md](tech/stack.md) collects the recommended ecosystem (Next.js, Vercel, Tailwind, Shopify) as advice. It is not a spec. It can change without anything above changing.
+[tech/stack.md](tech/stack.md) collects the recommended ecosystem (Next.js, Vercel, Tailwind, Shopify) as advice. It can change without anything above changing.
 
 ## Contributing to this repository
 

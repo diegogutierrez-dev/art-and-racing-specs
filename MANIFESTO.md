@@ -4,9 +4,9 @@ This document says what the platform is, what it is for, and what it is not. Eve
 
 ## What this is
 
-Art and Racing sells printed posters in drops. Every poster carries a unique code. With that code, the buyer claims the piece in their account and sees it inside their digital collection for the season. The collection has visible gaps: each gap is the next drop.
+Art and Racing sells printed posters in drops. Every poster carries a unique code. With that code, the buyer claims the piece in their account and sees it inside their digital collection for the season. Every slot the buyer has not filled yet is a placeholder: an empty frame that announces the next piece.
 
-The platform is the technical layer that makes that cycle possible: arrive, buy, receive, claim, collect. Nothing else.
+The platform is the technical layer that makes that cycle possible: arrive, buy, receive, claim, collect.
 
 ## Principles
 
@@ -14,21 +14,21 @@ The platform is the technical layer that makes that cycle possible: arrive, buy,
 
 Everything from the landing page to the paid order happens inside the platform. Everything after that (printing, packing, shipping, delivery) happens in the physical world.
 
-The platform records the physical world. It does not run it. It gives production a panel to report progress, it tells the buyer what is happening, and it activates the code when the poster arrives. It does not print, pack, ship, or answer for the quality of a print.
+The platform records the physical world. It gives production a panel to report progress, it tells the buyer what is happening, and it activates the code when the poster arrives. It does not print, pack, ship, or answer for the quality of a print.
 
-This line is written down so that everyone on the team knows which problems get solved with code and which ones get solved on the production floor. It is not a disclaimer. It is how the work is divided.
+This line is written down so that everyone on the team knows which problems get solved with code and which ones get solved on the production floor.
 
 ### 2. Three pieces, one experience
 
-The system is three pieces: the landing, the store, and the platform. Each one has a job. None of them tries to do another one's job.
+The system is three pieces: the landing, the store, and the platform. Each one has a job.
 
-The buyer goes through all three in a single session and should never feel like they switched products. Same domain, same visual identity, same session.
+The buyer goes through all three in a single session and should never feel like they switched products. That means one domain and one visual identity across the three.
 
 ### 3. One record of state
 
 The state of an order lives in one place. The production panel writes it. The buyer's account reads it. Emails reflect it. Nothing gets updated twice and there is no parallel spreadsheet.
 
-When an exception shows up (cancellation, reprint, return) it is a new state, not a special case. It is modeled from day one.
+When an exception shows up (cancellation, reprint, return) it is a new state, modeled from day one.
 
 ### 4. First sell, then operate, then collect
 
@@ -42,7 +42,7 @@ A table of codes, a redemption endpoint, a table of order states. No blockchain,
 
 ### 6. Boring where it should be boring
 
-The production panel is a table, filters, and state buttons. No dashboards. The excitement goes in the landing and the album. Operations go in a table.
+The production panel is a table, filters, and state buttons. No dashboards. The landing and the album are where the design effort goes.
 
 ### 7. Blocking decisions are made before writing code
 
@@ -55,15 +55,15 @@ Each one has a person and a date assigned. Without that, phase one does not star
 
 ### 8. Technical advice is advice
 
-The recommended stack (Next.js, Vercel, Tailwind and their ecosystem) lives in [tech/](tech/) as guidance, not as spec. Specs describe behavior and domain. The stack is the means, and it can change without the spec changing.
+The recommended stack (Next.js, Vercel, Tailwind and their ecosystem) lives in [tech/](tech/) as guidance. Specs describe behavior and domain. The stack can change without the spec changing.
 
 ## What this is not
 
-- Not a marketplace. The store sells its own drops.
-- Not a native app. Everything is web.
-- Not an NFT platform. The code is a row in a table.
-- Not a production tool. Production gets a panel; the work happens on the floor.
-- Not legal or accounting advice. Where a document touches those topics, it says so and points to someone who is.
+- A marketplace. The store sells its own drops.
+- A native app. Everything is web.
+- An NFT platform. The code is a row in a table.
+- A production tool. Production gets a panel; the work happens on the floor.
+- Legal or accounting advice. Where a document touches those topics, it says so and points to someone who is.
 
 ## How to use this repository
 

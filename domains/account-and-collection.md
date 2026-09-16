@@ -6,19 +6,19 @@
 
 ## Purpose
 
-From delivery to collection. The buyer receives a poster with a unique printed code, claims it in their account, and the piece appears in their season collection, with the gaps that are missing.
+From delivery to collection. The buyer receives a poster with a unique printed code, claims it in their account, and the piece appears in their season collection, next to placeholders for the pieces they do not have yet.
 
 ```
 ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐
 │   Poster   │──▶│ Redemption │──▶│  Account   │──▶│ Collection │
 │ printed    │   │ scan and   │   │ identity   │   │ season,    │
-│ code       │   │ claim      │   │ and history│   │ with gaps  │
+│ code       │   │ claim      │   │ and history│   │placeholders│
 └────────────┘   └────────────┘   └────────────┘   └────────────┘
 ```
 
 ## Minimal backend
 
-Three pieces and nothing else:
+Three pieces:
 
 1. **Codes table.** One code per unit sold.
 2. **Redemption endpoint.** Receives a code and an account, validates, and ties them.
@@ -81,11 +81,11 @@ Rules:
 
 ### Collection
 
-The season, with gaps.
+The season, with placeholders for what is missing.
 
 | Function | Detail |
 |---|---|
-| Season grid | All positions in the season. Redeemed ones are shown; the rest are gaps |
+| Season grid | All positions in the season. Redeemed ones show the piece; the rest are placeholders that announce the next drop |
 | Piece detail | Image, illustrator, drop, redemption date |
 | Multiple seasons | One grid per season, current one by default |
 
@@ -94,7 +94,7 @@ In P2 the collection is a simple list or grid. In P3 it becomes the [album](albu
 ## Domain rules
 
 1. **Codes are issued from drop one.** Even if redemption arrives in P2, every poster sold in P1 already has its code in the table and that code is printed.
-2. **The code is not a token or an asset.** It is a row in a table. It is not transferred, not sold, has no value outside the collection.
+2. **The code is a row in a table.** It is not transferred, not sold, and has no value outside the collection.
 3. **The collection is not edited by hand.** It is only filled by redemption and emptied by return.
 4. **No payment data in the account.** The buyer sees amount and method as text. For invoices, they go to Shopify.
 

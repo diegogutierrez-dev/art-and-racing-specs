@@ -15,7 +15,7 @@ The trademark has to be registered before the first drop. The two jurisdictions 
 
 **Art and Racing** is registered in the US with the USPTO. That is the selected path.
 
-Total costs and operations (US attorney for foreign applicants, filing basis, owner, maintenance) are still to be researched. That research does not reopen the decision; it executes it.
+Total costs and operations (US attorney for foreign applicants, filing basis, owner, maintenance) are still to be researched. That research is about how to file, not whether.
 
 ## Why
 
