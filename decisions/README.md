@@ -1,39 +1,40 @@
-# Decisiones
+# Decisions
 
-Registro de decisiones de arquitectura (ADR). Cada decisión es un archivo numerado. Una decisión no se edita una vez aceptada: si cambia, se crea una nueva que la reemplaza.
+Architecture decision records (ADRs). Each decision is a numbered file. A decision is not edited once accepted: if it changes, a new one is created that supersedes it.
 
-## Estados
+## Statuses
 
-| Estado | Significado |
+| Status | Meaning |
 |---|---|
-| `pendiente` | Bloquea trabajo. Tiene responsable y fecha límite |
-| `propuesta` | Hay una recomendación, falta aceptarla |
-| `aceptada` | Vigente. Los specs la asumen |
-| `rechazada` | Se evaluó y no se tomó. Se conserva el porqué |
-| `reemplazada` | Otra decisión la sustituye. Se enlaza la nueva |
+| `pending` | Blocks work. Has an owner and a deadline |
+| `proposed` | There is a recommendation, it has not been accepted yet |
+| `accepted` | In force. Specs assume it |
+| `rejected` | Evaluated and not taken. The reason is kept |
+| `superseded` | Another decision replaces it. The new one is linked |
 
-## Índice
+## Index
 
-| ID | Decisión | Estado | Bloquea |
+| ID | Decision | Status | Blocks |
 |---|---|---|---|
-| [0001](0001-pasarela-y-jurisdiccion.md) | Pasarela y jurisdicción | `pendiente` | F1 |
-| [0002](0002-identidad-del-usuario.md) | Identidad del usuario | `pendiente` | F1 |
-| [0003](0003-landing-y-plataforma-en-un-despliegue.md) | Landing y plataforma en un mismo despliegue, fuera de Shopify | `propuesta` | F1 |
-| [0004](0004-estados-como-eventos.md) | El estado del pedido es un log de eventos, no un campo | `propuesta` | F1 |
-| [0005](0005-album-no-bloquea-lanzamiento.md) | El álbum es F3 y no bloquea el lanzamiento | `aceptada` | — |
+| [0001](0001-payment-gateway-and-jurisdiction.md) | Payment gateway and jurisdiction | `pending` | P1 |
+| [0002](0002-user-identity.md) | User identity | `pending` | P1 |
+| [0003](0003-landing-and-platform-in-one-deployment.md) | Landing and platform in one deployment, outside Shopify | `proposed` | P1 |
+| [0004](0004-order-state-as-event-log.md) | Order state is an event log, not a field | `proposed` | P1 |
+| [0005](0005-album-does-not-block-launch.md) | The album is P3 and does not block launch | `accepted` | — |
+| [0006](0006-trademark-registration-in-the-us.md) | Trademark registration in the US | `accepted` | Final name |
 
-## Plantilla
+## Template
 
 ```markdown
-# NNNN · Título
+# NNNN · Title
 
-**Estado:** pendiente | propuesta | aceptada | rechazada | reemplazada
-**Responsable:** nombre
-**Fecha límite:** AAAA-MM-DD
-**Bloquea:** F1 | F2 | F3 | —
+**Status:** pending | proposed | accepted | rejected | superseded
+**Owner:** name
+**Deadline:** YYYY-MM-DD
+**Blocks:** P1 | P2 | P3 | —
 
-## Contexto
-## Opciones
-## Decisión
-## Consecuencias
+## Context
+## Options
+## Decision
+## Consequences
 ```

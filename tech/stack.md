@@ -1,151 +1,151 @@
-# Stack técnico · consejos
+# Tech stack · advice
 
-> Esto es una guía, no un spec. Los specs describen comportamiento y dominio; el stack es el medio y puede cambiar sin que cambie nada en [domains/](../domains/). Si algo de aquí contradice un spec, gana el spec.
+> This is guidance, not a spec. Specs describe behavior and domain; the stack is the means and can change without anything in [domains/](../domains/) changing. If something here contradicts a spec, the spec wins.
 
-## Resumen
+## Summary
 
-| Capa | Recomendación | Por qué |
+| Layer | Recommendation | Why |
 |---|---|---|
-| Framework | Next.js (App Router) con TypeScript | Un solo despliegue para landing, cuenta, panel y álbum. Server Components para la landing, Server Actions para el panel |
-| Hosting | Vercel | Cero configuración para Next.js, previews por PR, Fluid Compute para webhooks y cron |
-| Estilos | Tailwind CSS v4 + shadcn/ui | Velocidad en el panel (tablas, formularios) sin sacrificar control en la landing |
-| Base de datos | Postgres gestionado (Neon vía Vercel Marketplace) + Drizzle ORM | Tres tablas y un log de eventos. Postgres sobra y no estorba |
-| Correo transaccional | Resend (vía Marketplace) con plantillas en React Email | Cinco correos por pedido, disparados por evento |
-| Tienda | Shopify Basic | Catálogo, checkout, impuestos. Ver [tienda.md](../domains/tienda.md) |
-| Auth del comprador | Depende de la [decisión 0002](../decisions/0002-identidad-del-usuario.md) | Shopify Customer Account API, o Better Auth / Clerk con magic link |
-| Auth de producción | Separada del comprador. Clerk o Better Auth con roles | Nunca la misma tabla que el comprador |
-| Activos del álbum | Vercel Blob | Capas por pieza, servidas con caché largo |
-| 3D y shaders | Three.js vía react-three-fiber + drei | Solo en F3. Carga diferida en la ruta del álbum |
-| Configuración | `vercel.ts` con `@vercel/config` | Tipado, crons y headers en un solo archivo |
+| Framework | Next.js (App Router) with TypeScript | One deployment for landing, account, panel, and album. Server Components for the landing, Server Actions for the panel |
+| Hosting | Vercel | Zero config for Next.js, previews per PR, Fluid Compute for webhooks and cron |
+| Styling | Tailwind CSS v4 + shadcn/ui | Speed on the panel (tables, forms) without giving up control on the landing |
+| Database | Managed Postgres (Neon via Vercel Marketplace) + Drizzle ORM | Three tables and an event log. Postgres is more than enough and does not get in the way |
+| Transactional email | Resend (via Marketplace) with React Email templates | Five emails per order, fired by event |
+| Store | Shopify Basic | Catalog, checkout, taxes. See [store.md](../domains/store.md) |
+| Buyer auth | Depends on [decision 0002](../decisions/0002-user-identity.md) | Shopify Customer Account API, or Better Auth / Clerk with magic link |
+| Production auth | Separate from the buyer's. Clerk or Better Auth with roles | Never the same table as the buyer |
+| Album assets | Vercel Blob | Layers per piece, served with long cache |
+| 3D and shaders | Three.js via react-three-fiber + drei | P3 only. Lazy loaded on the album route |
+| Configuration | `vercel.ts` with `@vercel/config` | Typed, crons and headers in a single file |
 
-## Principios técnicos
+## Technical principles
 
-1. **Un despliegue.** Landing, cuenta, panel y álbum viven en el mismo proyecto Next.js. Ver [decisión 0003](../decisions/0003-landing-y-plataforma-en-un-despliegue.md).
-2. **Node.js, no Edge.** Webhooks, Server Actions y cron corren en el runtime Node.js por defecto (Fluid Compute). No usar `runtime = 'edge'`; no aporta nada aquí y quita compatibilidad.
-3. **Server-first.** La landing y la cuenta son Server Components. El cliente solo para lo interactivo: canje, panel, álbum.
-4. **Marketplace antes que infraestructura propia.** Postgres, correo, auth y monitoreo se aprovisionan desde el Vercel Marketplace. No se monta nada a mano hasta que un drop real lo justifique.
-5. **Tipos desde la base de datos.** Drizzle genera los tipos; los enums de estado viven en un solo lugar y se importan en todas partes.
+1. **One deployment.** Landing, account, panel, and album live in the same Next.js project. See [decision 0003](../decisions/0003-landing-and-platform-in-one-deployment.md).
+2. **Node.js, not Edge.** Webhooks, Server Actions, and cron run on the default Node.js runtime (Fluid Compute). Do not use `runtime = 'edge'`; it adds nothing here and removes compatibility.
+3. **Server-first.** The landing and the account are Server Components. Client only for what is interactive: redemption, panel, album.
+4. **Marketplace before custom infrastructure.** Postgres, email, auth, and monitoring are provisioned from the Vercel Marketplace. Nothing is set up by hand until a real drop justifies it.
+5. **Types from the database.** Drizzle generates the types; state enums live in one place and are imported everywhere.
 
-## Estructura sugerida del proyecto
+## Suggested project structure
 
 ```
 app/
-  (landing)/            # nivel 1 · público
+  (landing)/            # level 1 · public
     page.tsx
     drops/[slug]/
-  (cuenta)/             # nivel 3 · comprador
-    cuenta/
-      pedidos/
-      coleccion/
-      canjear/
-  (produccion)/         # nivel 3 · interno, ruta protegida
+  (account)/            # level 3 · buyer
+    account/
+      orders/
+      collection/
+      redeem/
+  (production)/         # level 3 · internal, protected route
     panel/
-  (album)/              # nivel 3 · F3, carga diferida
-    album/[temporada]/
+  (album)/              # level 3 · P3, lazy loaded
+    album/[season]/
   api/
     webhooks/shopify/   # orders/paid, orders/cancelled, refunds/create
-    canje/              # endpoint de canje
+    redeem/             # redemption endpoint
 db/
-  schema.ts             # pedidos, eventos_estado, codigos, drops, piezas
+  schema.ts             # orders, state_events, codes, drops, pieces
   migrations/
 lib/
-  shopify/              # cliente Storefront API, verificación HMAC
-  estados/              # máquina de transiciones válidas
-  correo/               # plantillas y envío
+  shopify/              # Storefront API client, HMAC verification
+  states/               # valid transition machine
+  email/                # templates and sending
 emails/                 # React Email
 vercel.ts
 ```
 
-Los grupos de rutas siguen los tres niveles de [docs/01-sistema.md](../docs/01-sistema.md).
+Route groups follow the three levels in [docs/01-system.md](../docs/01-system.md).
 
-## Integración con Shopify
+## Shopify integration
 
-| Necesidad | Herramienta | Nota |
+| Need | Tool | Note |
 |---|---|---|
-| Recibir `orders/paid` | Route Handler en `app/api/webhooks/shopify` | Verificar HMAC con el secreto del webhook antes de leer el body. Responder 200 rápido, procesar dentro del mismo handler (Fluid Compute lo permite) |
-| Idempotencia | Índice único en `shopify_order_id` | Un segundo webhook hace `INSERT ... ON CONFLICT DO NOTHING` |
-| Producto del drop en la landing | Storefront API (GraphQL) | Cachear con `use cache` y revalidar por tag al cambiar el drop |
-| Identidad (si decisión 0002 = A) | Customer Account API | OAuth con PKCE. La sesión de la plataforma guarda el token |
-| Sincronizar guía (opcional) | Admin API, `fulfillmentCreateV2` | Solo como espejo de salida al marcar *despachado* |
-| Tema de la tienda | Tema de Shopify con los mismos tokens de diseño | Mismas fuentes, colores y espaciado que la landing |
+| Receive `orders/paid` | Route Handler in `app/api/webhooks/shopify` | Verify HMAC with the webhook secret before reading the body. Respond 200 fast, process inside the same handler (Fluid Compute allows it) |
+| Idempotency | Unique index on `shopify_order_id` | A second webhook does `INSERT ... ON CONFLICT DO NOTHING` |
+| Drop's product on the landing | Storefront API (GraphQL) | Cache with `use cache` and revalidate by tag when the drop changes |
+| Identity (if decision 0002 = A) | Customer Account API | OAuth with PKCE. The platform session stores the token |
+| Sync tracking number (optional) | Admin API, `fulfillmentCreateV2` | Only as an outgoing mirror when marking *shipped* |
+| Store theme | Shopify theme with the same design tokens | Same fonts, colors, and spacing as the landing |
 
-## Base de datos
+## Database
 
-Esquema mínimo, uno a uno con los dominios:
+Minimal schema, one to one with the domains:
 
-| Tabla | Dominio | Nota |
+| Table | Domain | Note |
 |---|---|---|
-| `drops` | Landing, colección | slug, fecha, temporada, posición en cuadrícula |
-| `piezas` | Colección, álbum | drop, ilustrador, imagen, capas (URLs en Blob) |
-| `pedidos` | Pedidos | `shopify_order_id` único, `estado_actual` proyectado |
-| `eventos_estado` | Pedidos | Log. Ver [decisión 0004](../decisions/0004-estados-como-eventos.md) |
-| `codigos` | Cuenta y colección | código único, pedido, pieza, estado, cuenta |
-| `cuentas` | Cuenta | Solo si decisión 0002 = B. Si A, referencia al customer de Shopify |
-| `usuarios_produccion` | Producción | Roles `produccion` y `admin` |
-| `suscriptores` | Landing | Correo capturado, o delegar a Resend Audiences |
+| `drops` | Landing, collection | slug, date, season, grid position |
+| `pieces` | Collection, album | drop, illustrator, image, layers (Blob URLs) |
+| `orders` | Orders | `shopify_order_id` unique, `current_state` projected |
+| `state_events` | Orders | Log. See [decision 0004](../decisions/0004-order-state-as-event-log.md) |
+| `codes` | Account and collection | unique code, order, piece, state, account |
+| `accounts` | Account | Only if decision 0002 = B. If A, reference to the Shopify customer |
+| `production_users` | Production | Roles `production` and `admin` |
+| `subscribers` | Landing | Captured email, or delegate to Resend Audiences |
 
-La máquina de transiciones válidas vive en código (`lib/estados`), no en la base de datos. Un `CHECK` en `eventos_estado.estado` limita los valores al enum.
+The valid transition machine lives in code (`lib/states`), not in the database. A `CHECK` on `state_events.state` limits values to the enum.
 
-## Correos
+## Emails
 
-Resend con React Email. Una plantilla por estado que notifica ([pedidos.md](../domains/pedidos.md), sección Notificaciones). El envío se dispara al insertar el evento de estado. Si el envío falla, se reintenta; el estado no se revierte.
+Resend with React Email. One template per state that notifies ([orders.md](../domains/orders.md), Notifications section). Sending fires on inserting the state event. If sending fails, it is retried; the state is not reverted.
 
-Para el remitente, dominio propio verificado en Resend antes del drop uno.
+For the sender, own domain verified in Resend before drop one.
 
-## Canje y protección
+## Redemption and protection
 
-- Endpoint de canje como Server Action o Route Handler autenticado.
-- Rate limit por cuenta y por IP. Vercel Firewall con regla de rate limit sobre la ruta de canje, o Upstash Redis vía Marketplace si se quiere lógica propia.
-- BotID en el formulario de canje si aparece abuso. No antes.
-- El código nunca viaja en query string en enlaces de correo; el QR apunta a `/canjear?c=CODIGO` y la página lo lee del lado del servidor y lo pasa al formulario.
+- Redemption endpoint as an authenticated Server Action or Route Handler.
+- Rate limit per account and per IP. Vercel Firewall with a rate limit rule on the redemption route, or Upstash Redis via Marketplace if custom logic is wanted.
+- BotID on the redemption form if abuse shows up. Not before.
+- The code never travels in a query string in email links; the QR points to `/redeem?c=CODE` and the page reads it server-side and passes it to the form.
 
-## Detección de *entregado*
+## Detecting *delivered*
 
-F2: manual desde el panel.
-Después: un cron (`vercel.ts` → `crons`) que consulta la API de la transportadora para pedidos en *despachado* y marca *entregado*. Cada transportadora es un adaptador en `lib/transportadoras`.
+P2: manual from the panel.
+Later: a cron (`vercel.ts` → `crons`) that queries the carrier's API for orders in *shipped* and marks *delivered*. Each carrier is an adapter in `lib/carriers`.
 
-## Álbum (F3)
+## Album (P3)
 
-- `react-three-fiber` + `drei` para el canvas. Shader holográfico propio en GLSL.
-- Device Orientation API con permiso pedido en contexto (iOS lo exige en gesto de usuario).
-- Capas como texturas comprimidas (KTX2 o WebP según soporte) en Vercel Blob.
-- La ruta del álbum es un grupo aparte con `dynamic import` para que Three.js no entre en el bundle de la landing ni del panel.
-- Degradación: sin WebGL o sin permiso, imagen plana con CSS.
+- `react-three-fiber` + `drei` for the canvas. Custom holographic shader in GLSL.
+- Device Orientation API with permission requested in context (iOS requires it in a user gesture).
+- Layers as compressed textures (KTX2 or WebP depending on support) in Vercel Blob.
+- The album route is a separate group with `dynamic import` so Three.js does not enter the landing or panel bundle.
+- Degradation: without WebGL or without permission, flat image with CSS.
 
-## Entornos y variables
+## Environments and variables
 
-| Variable | Uso |
+| Variable | Use |
 |---|---|
-| `DATABASE_URL` | Postgres. La inyecta el Marketplace |
-| `SHOPIFY_STORE_DOMAIN` | Tienda |
+| `DATABASE_URL` | Postgres. Injected by the Marketplace |
+| `SHOPIFY_STORE_DOMAIN` | Store |
 | `SHOPIFY_STOREFRONT_TOKEN` | Storefront API |
-| `SHOPIFY_WEBHOOK_SECRET` | Verificación HMAC |
-| `SHOPIFY_ADMIN_TOKEN` | Solo si se sincroniza fulfillment |
-| `RESEND_API_KEY` | Correo. La inyecta el Marketplace |
-| `BLOB_READ_WRITE_TOKEN` | Activos del álbum |
-| `AUTH_*` | Según proveedor de auth elegido |
+| `SHOPIFY_WEBHOOK_SECRET` | HMAC verification |
+| `SHOPIFY_ADMIN_TOKEN` | Only if fulfillment is synced |
+| `RESEND_API_KEY` | Email. Injected by the Marketplace |
+| `BLOB_READ_WRITE_TOKEN` | Album assets |
+| `AUTH_*` | Per the chosen auth provider |
 
-Gestión con `vercel env`. Tres entornos: development, preview, production. La tienda de preview apunta a una tienda de desarrollo de Shopify, nunca a la real.
+Managed with `vercel env`. Three environments: development, preview, production. The preview store points to a Shopify development store, never the real one.
 
-## Observabilidad
+## Observability
 
-- Vercel Logs y Observability para funciones y webhooks.
-- Alertas mínimas: webhook que responde distinto de 200, correo que falla tres veces, pedido con más de N días en *despachado*.
-- Nada de dashboards de negocio en la plataforma. Para eso está el admin de Shopify.
+- Vercel Logs and Observability for functions and webhooks.
+- Minimum alerts: webhook responding anything other than 200, email failing three times, order more than N days in *shipped*.
+- No business dashboards in the platform. The Shopify admin is for that.
 
-## Lo que no se usa
+## What is not used
 
-| No | Por qué |
+| Not this | Why |
 |---|---|
-| Edge runtime | Sin beneficio aquí y con restricciones de compatibilidad |
-| App nativa | Todo es web. Ver [MANIFIESTO.md](../MANIFIESTO.md) |
-| Blockchain / NFTs | El código es una fila en una tabla |
-| Microservicios | Tres tablas y un log no justifican más de un despliegue |
-| CMS externo para la landing | Los drops y piezas viven en la misma base de datos. Si el equipo creativo necesita editar sin código, se evalúa en F2 |
-| Redis como base de datos | Solo para rate limit si hace falta |
+| Edge runtime | No benefit here and with compatibility restrictions |
+| Native app | Everything is web. See [MANIFESTO.md](../MANIFESTO.md) |
+| Blockchain / NFTs | The code is a row in a table |
+| Microservices | Three tables and a log do not justify more than one deployment |
+| External CMS for the landing | Drops and pieces live in the same database. If the creative team needs to edit without code, evaluate in P2 |
+| Redis as a database | Only for rate limiting if needed |
 
-## Cuándo revisar este documento
+## When to revisit this document
 
-- Al tomar la [decisión 0002](../decisions/0002-identidad-del-usuario.md): fija el proveedor de auth.
-- Al cerrar F1: confirmar que Shopify Basic y Vercel Hobby/Pro siguen siendo suficientes.
-- Antes de F3: revisar formatos de textura y soporte de Device Orientation en los navegadores del momento.
+- When [decision 0002](../decisions/0002-user-identity.md) is made: it fixes the auth provider.
+- When closing P1: confirm Shopify Basic and Vercel Hobby/Pro are still enough.
+- Before P3: review texture formats and Device Orientation support in the browsers of the moment.

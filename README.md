@@ -1,53 +1,53 @@
-# Afiches F1 · Specs
+# Art and Racing · Specs
 
-Especificaciones, dominios y manifiesto de la capa técnica de Afiches F1: landing, tienda y plataforma de colección.
+Specifications, domains, and manifesto for the technical layer of Art and Racing: landing, store, and collection platform.
 
-Este repositorio no contiene código. Solo Markdown. Es la fuente de verdad sobre **qué** se construye y **por qué**. El **cómo** vive en el repositorio de la aplicación, que se subordina a lo que está aquí.
+This repository contains no code. Only Markdown. It is the source of truth for **what** gets built and **why**. The **how** lives in the application repository, which is subordinate to what is here.
 
-## Empieza por aquí
+## Start here
 
-| Documento | Qué responde |
+| Document | What it answers |
 |---|---|
-| [MANIFIESTO.md](MANIFIESTO.md) | Qué somos, qué no somos, y los principios que ordenan todo lo demás |
-| [docs/00-alcance.md](docs/00-alcance.md) | Dónde empieza y dónde termina nuestra responsabilidad |
-| [docs/01-sistema.md](docs/01-sistema.md) | Las tres piezas del sistema y cómo se conectan |
-| [docs/02-fases.md](docs/02-fases.md) | Plan en tres fases: vender, operar, coleccionar |
-| [docs/03-glosario.md](docs/03-glosario.md) | Vocabulario compartido entre negocio y desarrollo |
+| [MANIFESTO.md](MANIFESTO.md) | What the platform is, what it is not, and the principles that order everything else |
+| [docs/00-scope.md](docs/00-scope.md) | What happens inside the platform and what happens outside it |
+| [docs/01-system.md](docs/01-system.md) | The three pieces of the system and how they connect |
+| [docs/02-phases.md](docs/02-phases.md) | Three-phase plan: sell, operate, collect |
+| [docs/03-glossary.md](docs/03-glossary.md) | Shared vocabulary between business and development |
 
-## Dominios
+## Domains
 
-Cada dominio es un área del sistema con su propio vocabulario, reglas y responsabilidades. Un dominio no debe saber más de otro dominio que lo que su spec declara como interfaz.
+Each domain is an area of the system with its own vocabulary, rules, and responsibilities. A domain should not know more about another domain than what that domain's spec declares as its interface.
 
-| Dominio | Fase | Descripción |
+| Domain | Phase | Description |
 |---|---|---|
-| [Landing](domains/landing.md) | F1 | El entry point. Contar, vender, retener |
-| [Tienda](domains/tienda.md) | F1 | Catálogo y checkout en Shopify |
-| [Pagos](domains/pagos.md) | F1 | Pasarela, monedas y jurisdicción |
-| [Pedidos](domains/pedidos.md) | F1 → F2 | Estados del pedido, handoff y excepciones |
-| [Producción](domains/produccion.md) | F2 | Panel de producción sobre el mismo registro de estado |
-| [Cuenta y colección](domains/cuenta-y-coleccion.md) | F2 | Identidad, códigos, canje y colección |
-| [Álbum](domains/album.md) | F3 | El álbum digital con profundidad y holográfico |
-| [Marca](domains/marca.md) | Previo a F1 | Registro de marca en Colombia y EE. UU. |
-| [Costos](domains/costos.md) | Transversal | Qué cuesta la capa técnica |
+| [Landing](domains/landing.md) | P1 | The entry point. Tell, sell, retain |
+| [Store](domains/store.md) | P1 | Catalog and checkout on Shopify |
+| [Payments](domains/payments.md) | P1 | Gateway, currencies, and jurisdiction |
+| [Orders](domains/orders.md) | P1 → P2 | Order states, handoff, and exceptions |
+| [Production](domains/production.md) | P2 | Production panel over the same state record |
+| [Account and collection](domains/account-and-collection.md) | P2 | Identity, codes, redemption, and collection |
+| [Album](domains/album.md) | P3 | The digital album with depth and holographic effect |
+| [Trademark](domains/trademark.md) | Before P1 | US trademark registration (decided). Costs and operations to research |
+| [Costs](domains/costs.md) | Cross-cutting | What the technical layer costs |
 
-## Decisiones
+## Decisions
 
-Las decisiones de arquitectura que definen el alcance viven en [decisions/](decisions/) como ADRs (Architecture Decision Records). Dos están **pendientes y bloquean la fase uno**:
+Architecture decisions that define scope live in [decisions/](decisions/) as ADRs (Architecture Decision Records). Two are **pending and block phase one**:
 
-- [0001 · Pasarela y jurisdicción](decisions/0001-pasarela-y-jurisdiccion.md)
-- [0002 · Identidad del usuario](decisions/0002-identidad-del-usuario.md)
+- [0001 · Payment gateway and jurisdiction](decisions/0001-payment-gateway-and-jurisdiction.md)
+- [0002 · User identity](decisions/0002-user-identity.md)
 
-## Stack técnico
+## Tech stack
 
-[tech/stack.md](tech/stack.md) recoge el ecosistema recomendado (Next.js, Vercel, Tailwind, Shopify) a modo de consejo. No es un spec. Puede cambiar sin que cambie nada de lo anterior.
+[tech/stack.md](tech/stack.md) collects the recommended ecosystem (Next.js, Vercel, Tailwind, Shopify) as advice. It is not a spec. It can change without anything above changing.
 
-## Cómo contribuir a este repositorio
+## Contributing to this repository
 
-- Todo cambio de alcance pasa primero por el [MANIFIESTO.md](MANIFIESTO.md). Si el manifiesto no lo permite, no entra.
-- Una decisión nueva se registra como ADR en [decisions/](decisions/) con su estado (`propuesta`, `aceptada`, `rechazada`, `reemplazada`).
-- Cada dominio tiene una sección **Preguntas abiertas**. Si algo no está resuelto, va ahí, no en un comentario de código.
-- Las cifras (comisiones, tasas, precios) llevan fecha de verificación. Si la fecha tiene más de seis meses, hay que reconfirmar antes de usarla.
+- Every scope change goes through the [MANIFESTO.md](MANIFESTO.md) first. If the manifesto does not allow it, it does not go in.
+- A new decision is recorded as an ADR in [decisions/](decisions/) with its status (`pending`, `proposed`, `accepted`, `rejected`, `superseded`).
+- Every domain has an **Open questions** section. If something is unresolved, it goes there, not in a code comment.
+- Figures (fees, rates, prices) carry a verification date. If the date is more than six months old, reconfirm before using it.
 
-## Origen
+## Origin
 
-Este repositorio nace de la presentación *Alcance técnico: landing, tienda y plataforma* (Afiches F1, documento de trabajo, septiembre de 2026). Esa presentación cubre solo la capa técnica; el modelo de negocio, el arte y la estrategia comercial están definidos por el equipo fuera de este repositorio.
+This repository comes from the presentation *Technical scope: landing, store, and platform* (working document, September 2026, when the project was still called Afiches F1). That presentation covers only the technical layer; the business model, the art, and the commercial strategy are defined by the team outside this repository.

@@ -1,63 +1,63 @@
-# Dominio · Álbum
+# Domain · Album
 
-**Fase:** F3
-**Pieza:** Nivel 3, plataforma
-**Principio rector:** web, no app. Es el diferenciador, pero no bloquea el lanzamiento
+**Phase:** P3
+**Piece:** Level 3, platform
+**Guiding principle:** web, not app. It is the differentiator, but it does not block launch
 
-## Propósito
+## Purpose
 
-Convertir la colección en algo que se quiera abrir. El afiche en el teléfono, con profundidad y efecto holográfico, y la cuadrícula de la temporada con los huecos que empujan al siguiente drop.
+Turn the collection into something people want to open. The poster on the phone, with depth and holographic effect, and the season grid with the gaps that push toward the next drop.
 
-## Los tres efectos
+## The three effects
 
-| Efecto | Qué es | Cómo se logra |
+| Effect | What it is | How it is achieved |
 |---|---|---|
-| **Profundidad** | El afiche en capas (fondo, circuito, figura) que se mueven con el giro del teléfono | Cada pieza se entrega en capas separadas. Parallax con la orientación del dispositivo |
-| **Holográfico** | Shader que reacciona a la orientación del dispositivo. Es lo que hace sentir cromo | Shader propio sobre la capa superior, alimentado por Device Orientation |
-| **Cuadrícula** | La temporada completa con los huecos visibles. El hueco es lo que empuja al siguiente drop | Vista de temporada con posiciones fijas; las no canjeadas se muestran vacías o en silueta |
+| **Depth** | The poster in layers (background, circuit, figure) that move when the phone tilts | Each piece is delivered in separate layers. Parallax driven by device orientation |
+| **Holographic** | Shader that reacts to device orientation. It is what makes it feel like chrome | Custom shader on the top layer, fed by Device Orientation |
+| **Grid** | The full season with visible gaps. The gap is what pushes toward the next drop | Season view with fixed positions; unredeemed ones are shown empty or as silhouettes |
 
 ## Stack
 
-Three.js · shader propio · Device Orientation API · mismo despliegue de la plataforma.
+Three.js · custom shader · Device Orientation API · same deployment as the platform.
 
-No hay app nativa. Todo corre en el navegador del teléfono. Ver [tech/stack.md](../tech/stack.md) para el detalle.
+There is no native app. Everything runs in the phone's browser. See [tech/stack.md](../tech/stack.md) for detail.
 
-## Responsabilidades
+## Responsibilities
 
-- Renderizar una pieza canjeada con sus capas y el shader.
-- Responder a la orientación del dispositivo (y al mouse en escritorio como degradación).
-- Mostrar la cuadrícula de temporada con huecos.
-- Enlazar cada hueco al drop correspondiente (si ya salió, a la tienda; si no, a la landing con fecha).
+- Render a redeemed piece with its layers and the shader.
+- Respond to device orientation (and to the mouse on desktop as a fallback).
+- Show the season grid with gaps.
+- Link each gap to the corresponding drop (if it already came out, to the store; if not, to the landing with a date).
 
-## Lo que el álbum no hace
+## What the album does not do
 
-- No canjea. El canje es de [cuenta y colección](cuenta-y-coleccion.md).
-- No vende. Enlaza a la tienda.
-- No funciona sin cuenta. Es una vista privada de la colección.
+- It does not redeem. Redemption belongs to [account and collection](account-and-collection.md).
+- It does not sell. It links to the store.
+- It does not work without an account. It is a private view of the collection.
 
-## Dependencias con el arte
+## Dependencies on the art
 
-El álbum necesita que cada pieza se entregue en capas separadas (fondo, circuito, figura, más una máscara para el holográfico). Esto es un requisito para el equipo creativo y debe estar en el pipeline de producción de cada drop desde el drop uno, aunque el álbum llegue después.
+The album needs each piece delivered in separate layers (background, circuit, figure, plus a mask for the holographic effect). This is a requirement for the creative team and must be in the production pipeline of every drop from drop one, even though the album arrives later.
 
-Si una pieza no tiene capas, el álbum la muestra plana. No bloquea nada.
+If a piece has no layers, the album shows it flat. Nothing is blocked.
 
-## Reglas
+## Rules
 
-1. **No bloquea el lanzamiento.** Los códigos se emiten desde el drop uno; el álbum puede llegar en el drop seis sin perder nada.
-2. **Degradación elegante.** Sin permiso de orientación, sin WebGL o en escritorio, la pieza se ve plana y la cuadrícula funciona igual.
-3. **Los activos se sirven optimizados.** Capas en formato comprimido, tamaño acorde al dispositivo. El álbum no puede pesar más que la landing.
-4. **El permiso de orientación se pide en contexto.** Solo al abrir una pieza, con explicación, no al cargar la página.
+1. **It does not block launch.** Codes are issued from drop one; the album can arrive at drop six without losing anything.
+2. **Graceful degradation.** Without orientation permission, without WebGL, or on desktop, the piece is shown flat and the grid works the same.
+3. **Assets are served optimized.** Layers in compressed format, sized for the device. The album cannot weigh more than the landing.
+4. **Orientation permission is requested in context.** Only when opening a piece, with an explanation, not on page load.
 
-## Criterios de aceptación (F3)
+## Acceptance criteria (P3)
 
-- [ ] Un comprador abre una pieza canjeada en iOS y Android y ve profundidad y holográfico al girar el teléfono.
-- [ ] En escritorio, la pieza responde al mouse.
-- [ ] La cuadrícula muestra las piezas canjeadas y los huecos, y cada hueco enlaza al drop.
-- [ ] Una pieza sin capas se muestra plana sin error.
-- [ ] El álbum carga en menos de tres segundos en una conexión móvil promedio.
+- [ ] A buyer opens a redeemed piece on iOS and Android and sees depth and holographic effect when tilting the phone.
+- [ ] On desktop, the piece responds to the mouse.
+- [ ] The grid shows redeemed pieces and gaps, and each gap links to its drop.
+- [ ] A piece without layers is shown flat without error.
+- [ ] The album loads in under three seconds on an average mobile connection.
 
-## Preguntas abiertas
+## Open questions
 
-- ¿Cuántas capas por pieza? Tres (fondo, circuito, figura) es la hipótesis. Definir con el equipo creativo antes del drop uno para que el pipeline de arte lo incluya.
-- ¿El holográfico es por pieza o global? Puede haber piezas "cromo" y piezas normales como mecánica de rareza.
-- ¿Compartir una pieza (imagen o enlace público)? Es viralidad, pero abre una vista pública del álbum. Fuera de F3 salvo que negocio lo priorice.
+- How many layers per piece? Three (background, circuit, figure) is the hypothesis. Define with the creative team before drop one so the art pipeline includes it.
+- Is the holographic effect per piece or global? There could be "chrome" pieces and normal pieces as a rarity mechanic.
+- Share a piece (image or public link)? It is virality, but it opens a public view of the album. Out of P3 unless business prioritizes it.

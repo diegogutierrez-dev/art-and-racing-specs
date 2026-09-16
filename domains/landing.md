@@ -1,61 +1,61 @@
-# Dominio · Landing
+# Domain · Landing
 
-**Fase:** F1
-**Pieza:** Nivel 1, el entry point
-**Principio rector:** es el entry point, no un folleto
+**Phase:** P1
+**Piece:** Level 1, the entry point
+**Guiding principle:** it is the entry point, not a brochure
 
-## Propósito
+## Purpose
 
-La landing tiene que resolver tres trabajos distintos con un solo diseño. Si solo cuenta la historia, no sirve.
+The landing has to do three different jobs with a single design. If it only tells the story, it does not work.
 
-| Trabajo | Qué hace | Hacia dónde lleva |
+| Job | What it does | Where it leads |
 |---|---|---|
-| **Contar** | El drop de la semana, los ilustradores, por qué esto existe | Se queda en la landing |
-| **Vender** | Ruta directa al producto sin fricción. El checkout está a un clic | Tienda |
-| **Retener** | Entrada a la cuenta: ver mi colección, canjear un código | Plataforma |
+| **Tell** | The drop of the week, the illustrators, why this exists | Stays on the landing |
+| **Sell** | Direct route to the product without friction. Checkout is one click away | Store |
+| **Retain** | Entry to the account: see my collection, redeem a code | Platform |
 
-## Responsabilidades
+## Responsibilities
 
-- Mostrar el drop actual con ruta directa al producto en la tienda.
-- Contar la narrativa: ilustradores, temporada, por qué existe el proyecto.
-- Capturar correo para avisar del siguiente drop.
-- Dar acceso a la cuenta (entrar, ver colección, canjear código).
-- Mostrar drops anteriores (agotados o no) como parte de la narrativa de temporada.
+- Show the current drop with a direct route to the product in the store.
+- Tell the narrative: illustrators, season, why the project exists.
+- Capture email to announce the next drop.
+- Give access to the account (sign in, see collection, redeem code).
+- Show past drops (sold out or not) as part of the season narrative.
 
-## No es responsabilidad de la landing
+## Not the landing's responsibility
 
-- Catálogo completo ni carrito. Eso es la tienda.
-- Autenticación. La landing enlaza a la cuenta; la plataforma autentica.
-- Contenido editorial extenso. Una landing, no un blog.
+- Full catalog or cart. That is the store.
+- Authentication. The landing links to the account; the platform authenticates.
+- Long editorial content. A landing, not a blog.
 
-## Reglas
+## Rules
 
-1. **Un clic al producto.** Desde cualquier vista de la landing, el producto del drop actual está a un clic. El checkout, a dos.
-2. **La captura de correo no bloquea nada.** Es una invitación, no un muro.
-3. **El drop actual es dinámico.** No se despliega código para cambiar de drop. El drop actual se define por datos (fecha de publicación, estado del producto en Shopify, o un campo de la plataforma).
-4. **Misma sesión.** Si el comprador tiene sesión en la plataforma, la landing lo sabe y muestra su acceso a la cuenta, no el botón de entrar.
+1. **One click to the product.** From any view on the landing, the current drop's product is one click away. Checkout, two.
+2. **Email capture blocks nothing.** It is an invitation, not a wall.
+3. **The current drop is dynamic.** No deployment is needed to change drops. The current drop is defined by data (publication date, product state in Shopify, or a field in the platform).
+4. **Same session.** If the buyer has a session on the platform, the landing knows it and shows their account access, not the sign-in button.
 
-## Entidades
+## Entities
 
-| Entidad | Origen | Uso en la landing |
+| Entity | Source | Use on the landing |
 |---|---|---|
-| Drop | Plataforma | Cuál es el actual, cuáles pasaron, cuál viene |
-| Producto | Shopify | Imagen, precio, disponibilidad, enlace a compra |
-| Ilustrador | Plataforma | Nombre, bio corta, piezas en la temporada |
-| Suscriptor | Plataforma (o proveedor de correo) | Correo capturado |
+| Drop | Platform | Which one is current, which ones passed, which one is next |
+| Product | Shopify | Image, price, availability, purchase link |
+| Illustrator | Platform | Name, short bio, pieces in the season |
+| Subscriber | Platform (or email provider) | Captured email |
 
-## Decisión asociada
+## Related decision
 
-[0003 · Landing y plataforma en un mismo despliegue, fuera de Shopify](../decisions/0003-landing-y-plataforma-en-un-despliegue.md). Dentro de Shopify es más rápido y sin costo extra, pero el diseño queda limitado por el tema. Aparte da control total y es donde vive la plataforma, a cambio de mantener dos despliegues.
+[0003 · Landing and platform in one deployment, outside Shopify](../decisions/0003-landing-and-platform-in-one-deployment.md). Inside Shopify is faster and has no extra cost, but the design is limited by the theme. Outside gives full control and is where the platform lives, at the cost of maintaining two deployments.
 
-## Criterios de aceptación (F1)
+## Acceptance criteria (P1)
 
-- [ ] Un visitante nuevo ve el drop actual y llega al producto en la tienda con un clic.
-- [ ] Un visitante puede dejar su correo y recibe confirmación.
-- [ ] Un comprador con cuenta ve la ruta a su colección desde la landing.
-- [ ] Cambiar el drop actual no requiere despliegue.
+- [ ] A new visitor sees the current drop and reaches the product in the store with one click.
+- [ ] A visitor can leave their email and receives confirmation.
+- [ ] A buyer with an account sees the route to their collection from the landing.
+- [ ] Changing the current drop requires no deployment.
 
-## Preguntas abiertas
+## Open questions
 
-- ¿Los drops pasados se muestran como archivo navegable o solo como cuadrícula de temporada? Afecta cuánto de la narrativa vive en la landing vs. en el álbum.
-- ¿Captura de correo con proveedor externo (lista de Shopify, Resend, etc.) o tabla propia? Ver [tech/stack.md](../tech/stack.md).
+- Are past drops shown as a browsable archive or only as the season grid? Affects how much of the narrative lives on the landing vs. in the album.
+- Email capture with an external provider (Shopify list, Resend, etc.) or our own table? See [tech/stack.md](../tech/stack.md).
