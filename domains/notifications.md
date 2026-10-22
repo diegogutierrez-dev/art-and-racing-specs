@@ -41,7 +41,7 @@ With [0007](../decisions/0007-headless-storefront.md) the platform owns the buye
 
 | Shopify notification | Keep? | Why |
 |---|---|---|
-| Order confirmation | Off | Replaced by *Order confirmed* below, which also explains the code |
+| Order confirmation | Off | Replaced by *Order confirmed* below, which also explains the cromo |
 | Shipping confirmation and updates | Off | Replaced by *Shipped* and *Delivered* |
 | Refund, cancellation | Off | Replaced by *Cancelled* and *Refund* |
 | Abandoned checkout | On (Shopify) | Needs checkout data the platform does not have; branded in Shopify settings |
@@ -53,25 +53,30 @@ Each email is one React Email template with Spanish and English versions. The bu
 the one they bought in (Shopify order `customerLocale`); subscribers keep the language they signed
 up in.
 
+Cromo moments follow [0009](../decisions/0009-cromo-without-codes.md): silhouette on payment, complete
+on shipping, removed on cancel or return. There are no codes.
+
 | # | Email | Trigger | Phase | Must contain |
 |---|---|---|---|---|
-| T1 | Order confirmed | State event *01 Paid* | P1 | Order number, poster(s) with thumbnail, variant, amount, shipping address, what happens next (printing, shipping times), that each poster carries a code, link to the account |
-| T2 | In production | State event *03 In production* | P2, optional | "Your copy is being printed", expected ship date |
-| T3 | Shipped | State event *05 Shipped* | P1 (manual state) | Carrier, tracking number, tracking link, estimated delivery |
-| T4 | Delivered, claim your code | State event *06 Delivered* | P2 | The code is active, how to redeem (link to `/redeem`, never the code in the URL), what the cromo is, progress toward the Champion Edition |
-| T5 | Cancelled | State event *Cancelled* | P1 | What was cancelled, refund handled by Shopify and how long it takes |
-| T6 | Refund / return | State event *Return* | P2 | Amount, poster leaves the collection |
-| T7 | Champion Edition unlocked | Collection reaches the unlock count | P2 | That it is free, shipping address confirmation, when it ships |
+| T1 | Order confirmed | State event *01 Paid* | P1 | Order number, poster(s) with thumbnail, variant, amount, shipping address, what happens next (printing, shipping times), that the cromo is already in the album as a silhouette, links to the order and the album |
+| T2 | In production | State event *03 In production* | P2, optional | "Your copy is being printed", expected ship date. Only when printing takes more than a day |
+| T3 | Shipped | State event *05 Shipped* | P1 (manual state) | Carrier, tracking number, tracking link, estimated delivery, that the cromo is now complete |
+| T4 | Did it arrive safely? | State event *06 Delivered* | P2 | Care for hanging it, how to report damage by replying |
+| T5 | Cancelled | State event *Cancelled* | P1 | What was cancelled, that its cromos left the album, refund handled by Shopify and how long it takes |
+| T6 | Refund / return | State event *Return* or Shopify `refunds/create` | P2 | Amount, that the returned posters' cromos left the album and stop counting |
+| T7 | Champion Edition unlocked | Shipped posters of the season reach the unlock count | P2 | That it is free and not for sale, shipping address confirmation |
+| A1 | Sign-in link | Buyer asks to open their account or album | P1 if accounts are passwordless ([0002](../decisions/0002-user-identity.md)) | One-time link, expiry, what to do if it wasn't them |
 | M1 | Confirm your subscription | Email captured on the landing or a product page | P1 | Double opt-in link, what they will receive and how often |
 | M2 | New drop is out | Drop release (Thursday of race week) | P1 | The poster, the race, edition size, link to its product page |
-| M3 | Next drop reminder | Optional, day before release | Later | Date and time, the race |
+| M3 | Drop tomorrow | Day before release, to people who asked to be told about that round | P2 | The race, edition size, that it is not reprinted. No art before release |
+| M4 | Close to the Champion Edition | Buyer is one or two shipped posters from the unlock count | P2 | Progress, what the Champion Edition is, the next drop |
 
 Rules for content:
 
 1. One purpose per email. The subject says it: *Order #1042 confirmed*, *Your Baku poster has
    shipped*.
 2. No marketing in transactional emails beyond one line about the next drop.
-3. Codes are never written in an email. T4 links to the account where the code is redeemed.
+3. Links in emails never carry personal data in the URL; sign-in links carry a one-time token only.
 4. Every marketing email has a one-click unsubscribe (`List-Unsubscribe` header and a link);
    transactional emails do not.
 
@@ -122,7 +127,8 @@ in the panel (or the admin in P1) → T3 arrives with the tracking link.
 
 - [ ] Sending domain verified with SPF, DKIM and DMARC; first emails land in the inbox, not spam,
       in Gmail and Outlook.
-- [ ] T1, T3, T5, M1 and M2 exist in Spanish and English and pass the client check.
+- [ ] T1, T3, T5, M1 and M2 exist in Spanish and English and pass the client check. The rest of the
+      catalog is designed and reviewed at `/correos`.
 - [ ] A test order on the development store sends T1 once, even if the webhook arrives twice.
 - [ ] Shopify's order, shipping and cancellation notifications are off in the live store.
 - [ ] Every send is recorded with its Resend status.

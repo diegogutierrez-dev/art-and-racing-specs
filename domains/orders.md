@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Model the lifecycle of an order from payment until the collection becomes active. One record of state feeds both views (production and buyer). Nothing gets updated twice and there is no parallel spreadsheet.
+Model the lifecycle of an order from payment until delivery, and the cromo moments it drives ([0009](../decisions/0009-cromo-without-codes.md)). One record of state feeds both views (production and buyer). Nothing gets updated twice and there is no parallel spreadsheet.
 
 ## State lifecycle
 
@@ -21,13 +21,13 @@ Model the lifecycle of an order from payment until the collection becomes active
 
 | # | State | Who marks it | Trigger | Effect |
 |---|---|---|---|---|
-| 01 | **Paid** | Platform | Shopify `orders/paid` webhook | Order is created, codes are issued (inactive), confirmation email |
+| 01 | **Paid** | Platform | Shopify `orders/paid` webhook | Order is created, its cromos enter the album as silhouettes, confirmation email |
 | 02 | **Queued** | Platform | Automatic after 01 | Ready to produce. Appears in the production panel |
 | 03 | **In production** | Production | Click in the panel | The team marks the start |
 | 04 | **Packed** | Production | Click in the panel | Ready to ship |
-| 05 | **Shipped** | Production | Click in the panel + tracking number + carrier | Email with tracking number and tracking link |
-| 06 | **Delivered** | Platform | Automatic (tracking) or manual if there is no integration | Closes the order. Codes become active |
-| 07 | **Collection active** | Platform | Automatic after 06 | The code is redeemable in the account |
+| 05 | **Shipped** | Production | Click in the panel + tracking number + carrier | Cromos fill in and count toward the Champion Edition. Email with tracking number and tracking link |
+| 06 | **Delivered** | Platform | Automatic (tracking) or manual if there is no integration | Closes the order. Delivery check email |
+| 07 | **Collection active** | — | — | Removed by [0009](../decisions/0009-cromo-without-codes.md): the cromo is complete from 05 |
 
 ### The two handoffs
 
@@ -40,14 +40,14 @@ Exceptions are modeled from day one. Each one is a state, not a special case.
 
 | State | From | Who marks it | Effect |
 |---|---|---|---|
-| **Cancelled** | 01, 02 (before producing) | Platform via `orders/cancelled` webhook, or production from the panel | Codes voided. Refund is handled by Shopify |
-| **Reprint** | 03, 04, 05, 06 | Production | Goes back to 03 with a reprint flag. Original codes are kept (the new poster carries the same code) or reissued (production decides case by case) |
-| **Return** | 06 | Production via Shopify `refunds/create` or manually | Codes voided if they were already active. The poster leaves the collection |
+| **Cancelled** | 01, 02 (before producing) | Platform via `orders/cancelled` webhook, or production from the panel | The order's cromos leave the album. Refund is handled by Shopify |
+| **Reprint** | 03, 04, 05, 06 | Production | Goes back to 03 with a reprint flag. The cromo does not change |
+| **Return** | 05, 06 | Production via Shopify `refunds/create` or manually | The returned posters' cromos leave the album and stop counting toward the Champion Edition |
 
 Exception rules:
 
 1. An order in an exception keeps its history. A state is never deleted, one is added.
-2. Cancelling an order with already-redeemed codes is not possible from the panel. It requires a return.
+2. Cancelling an order that has already shipped is not possible from the panel. It requires a return.
 3. A reprint does not change the state visible to the buyer unless it is decided to communicate it (open question).
 
 ## Entities
@@ -60,7 +60,7 @@ Exception rules:
 | shopify_order_id | reference | Shopify | Unique. Basis of webhook idempotency |
 | number | text | Shopify | The number visible to the buyer (#1001) |
 | buyer | reference to account or email | Shopify | Depends on [decision 0002](../decisions/0002-user-identity.md) |
-| items | list | Shopify | Product, variant, quantity. Each unit generates a code |
+| items | list | Shopify | Product, variant, quantity. Each unit is one cromo |
 | amount | number + currency | Shopify | No conversion |
 | current_state | enum | Platform | Derived from the last state event |
 | drop | reference | Platform | For the queue by drop |
@@ -86,11 +86,12 @@ Automatic email on every state change visible to the buyer. Templates, sending a
 
 | State | Email | Minimum content |
 |---|---|---|
-| 01 Paid | Confirmation | Order number, items, link to account |
+| 01 Paid | Confirmation | Order number, items, link to account, cromo as a silhouette |
 | 03 In production | Optional | "Your poster is in production" |
-| 05 Shipped | Yes | Tracking number, carrier, tracking link |
-| 06 Delivered | Yes | "You can now claim your code" with redemption link |
-| Cancelled | Yes | Cancellation confirmation |
+| 05 Shipped | Yes | Tracking number, carrier, tracking link, cromo complete |
+| 06 Delivered | Yes | "Did it arrive safely?" |
+| Cancelled | Yes | Cancellation confirmation, cromos removed |
+| Return | Yes | Refund amount, cromos removed |
 
 States 02 and 04 are internal and generate no email.
 
@@ -112,7 +113,7 @@ P1:
 P2:
 - [ ] Production moves an order through 03, 04, and 05 from the panel.
 - [ ] On shipping, the buyer receives tracking number and tracking link.
-- [ ] On delivery, the order's codes become active.
+- [ ] On shipping, the order's cromos fill in; on cancel or return, they leave the album.
 - [ ] Cancellation, reprint, and return are recorded with their note and author.
 
 ## Open questions

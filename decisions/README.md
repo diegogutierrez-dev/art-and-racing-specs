@@ -24,6 +24,7 @@ Architecture decision records (ADRs). Each decision is a numbered file. A decisi
 | [0006](0006-trademark-registration-in-the-us.md) | Trademark registration in the US | `accepted` | Final name |
 | [0007](0007-headless-storefront.md) | Headless storefront: product pages in the platform, checkout in Shopify | `accepted` | P1 |
 | [0008](0008-content-in-sanity.md) | Editorial content in Sanity | `accepted` | — |
+| [0009](0009-cromo-without-codes.md) | The cromo follows the order, without a code | `proposed` | Album, emails |
 
 ## Template
 
