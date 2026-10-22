@@ -64,11 +64,11 @@ on shipping, removed on cancel or return. There are no codes.
 | T4 | Did it arrive safely? | State event *06 Delivered* | P2 | Care for hanging it, how to report damage by replying |
 | T5 | Cancelled | State event *Cancelled* | P1 | What was cancelled, that its cromos left the album, refund handled by Shopify and how long it takes |
 | T6 | Refund / return | State event *Return* or Shopify `refunds/create` | P2 | Amount, that the returned posters' cromos left the album and stop counting |
-| T7 | Champion Edition unlocked | Shipped posters of the season reach the unlock count | P2 | That it is free and not for sale, shipping address confirmation |
+| T7 | Champion Edition unlocked | Shipped posters of the season reach the unlock count | P2 | Congratulations, the goal reached, that it is free, button to claim it (confirms the shipping address) |
 | A1 | Sign-in link | Buyer asks to open their account or album | P1 if accounts are passwordless ([0002](../decisions/0002-user-identity.md)) | One-time link, expiry, what to do if it wasn't them |
 | M1 | Confirm your subscription | Email captured on the landing or a product page | P1 | Double opt-in link, what they will receive and how often |
 | M2 | New drop is out | Drop release (Thursday of race week) | P1 | The poster, the race, edition size, link to its product page |
-| M3 | Drop tomorrow | Day before release, to people who asked to be told about that round | P2 | The race, edition size, that it is not reprinted. No art before release |
+| M3 | Race week | Monday of race week, to subscribers | P2 | The race and its city, release day, edition size, that it is not reprinted. No art before release |
 | M4 | Close to the Champion Edition | Buyer is one or two shipped posters from the unlock count | P2 | Progress, what the Champion Edition is, the next drop |
 | M5 | Welcome | Right after M1 is confirmed | P1 | How drops work (one per race, Thursday, 300 numbered copies, no reprints), the album, the Champion Edition, link to the season |
 | M6 | Last copies | Once per drop, when stock falls under 10% of the edition | P2 | The poster, copies left, that it is not reprinted. Only to subscribers who don't own it |
@@ -82,8 +82,8 @@ Rules for content:
 3. Links in emails never carry personal data in the URL; sign-in links carry a one-time token only.
 4. Marketing is capped at two emails a week per subscriber, drop announcements included. When M6 or M7
    would break the cap, it waits or is skipped; M2 always goes out.
-5. Tone: like the team telling a friend who follows the races. Short, warm, concrete; one racing image at
-   most per email. Transactional subjects stay plain so they are found in the inbox.
+5. Tone: a club with Formula 1 heritage, in the spirit of Gran Turismo. Subscribers and buyers are members;
+   marketing speaks of race weeks, circuits and the collection. Short and concrete. Transactional subjects stay plain so they are found in the inbox.
 6. Every marketing email has a one-click unsubscribe (`List-Unsubscribe` header and a link);
    transactional emails do not.
 
