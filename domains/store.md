@@ -28,14 +28,15 @@ Where the transaction happens. Shopify handles catalog, cart, checkout, taxes, a
 1. **The order webhook is mandatory.** It is the only integration point of P1. Without it, the platform does not know a sale happened.
 2. **Shopify is the source of truth for the commercial order.** Amount, items, address, customer. The platform replicates what it needs and stores the Shopify ID as a reference.
 3. **The platform is the source of truth for the operational state.** Shopify is not updated with production states unless it is decided to sync fulfillment on shipping (open question).
-4. **The store's visual theme is the same as the landing's.** The buyer should not feel like they switched products.
+4. **The buyer never feels they switched products.** With [0007](../decisions/0007-headless-storefront.md) product pages and cart live in the platform ([product-detail.md](product-detail.md)); only Shopify's checkout remains, branded with the landing's logo, colours and fonts.
 
 ## Integrations
 
 | Integration | Direction | Use | Phase |
 |---|---|---|---|
 | `orders/paid` webhook | Shopify → Platform | Create order and issue codes | P1 |
-| Storefront API | Platform → Shopify | Show the drop's product on the landing | P1 |
+| Storefront API | Platform → Shopify | Product pages, variants, cart ([product-detail.md](product-detail.md)) | P1 |
+| `products/update`, `inventory_levels/update` webhooks | Shopify → Platform | Revalidate cached product pages | P1 |
 | `orders/cancelled` webhook | Shopify → Platform | Mark order as cancelled | P2 |
 | `refunds/create` webhook | Shopify → Platform | Record a return | P2 |
 | Admin API (fulfillment) | Platform → Shopify | Sync tracking number on shipping | P2, optional |

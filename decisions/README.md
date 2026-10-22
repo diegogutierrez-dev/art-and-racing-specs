@@ -22,6 +22,7 @@ Architecture decision records (ADRs). Each decision is a numbered file. A decisi
 | [0004](0004-order-state-as-event-log.md) | Order state is an event log, not a field | `proposed` | P1 |
 | [0005](0005-album-does-not-block-launch.md) | The album is P3 and does not block launch | `accepted` | — |
 | [0006](0006-trademark-registration-in-the-us.md) | Trademark registration in the US | `accepted` | Final name |
+| [0007](0007-headless-storefront.md) | Headless storefront: product pages in the platform, checkout in Shopify | `proposed` | P1 |
 
 ## Template
 

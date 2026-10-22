@@ -1,0 +1,139 @@
+# Domain · Notifications (email)
+
+**Phase:** P1 (order and newsletter emails) → P2 (production states)
+**Piece:** Level 3, platform
+**Guiding principle:** one voice, fired by events
+**Owners:** development (sending, triggers), M. Isabel Z (content, review and tests)
+
+## Purpose
+
+Every email a buyer or subscriber receives comes from the platform, in Art and Racing's voice and
+design, triggered by something that happened. This spec defines which emails exist, when they go
+out, what they contain, how they are built and how they are tested.
+
+## Responsibilities
+
+- Send transactional emails on order state events ([orders.md](orders.md), Notifications).
+- Send the newsletter confirmation and drop announcements to subscribers.
+- Keep templates, copy and translations in one place, versioned with the code.
+- Record what was sent, to whom and whether it was delivered.
+
+## Not this domain's responsibility
+
+- Receipts and payment emails from Shopify's checkout. See *Shopify's own emails* below.
+- Deciding order states. Notifications react to state events; they never create them.
+
+## Provider
+
+Resend, provisioned through the Vercel Marketplace (`RESEND_API_KEY`), templates in React Email.
+Already the recommendation in [tech/stack.md](../tech/stack.md).
+
+| Item | Value |
+|---|---|
+| Sending domain | A subdomain of the brand domain, for example `mail.artandracing.com`, verified in Resend with SPF, DKIM and a DMARC record (`p=none` first, `quarantine` after two weeks clean) |
+| From | `Art and Racing <hola@…>` for transactional, `Art and Racing <drops@…>` for announcements |
+| Reply-to | A real, monitored inbox. Buyers reply to shipping emails |
+| Streams | Transactional and marketing kept apart (separate from-addresses; Resend Broadcasts or a separate audience for marketing), so a complaint on announcements never hurts order emails |
+
+## Shopify's own emails
+
+With [0007](../decisions/0007-headless-storefront.md) the platform owns the buyer's emails.
+
+| Shopify notification | Keep? | Why |
+|---|---|---|
+| Order confirmation | Off | Replaced by *Order confirmed* below, which also explains the code |
+| Shipping confirmation and updates | Off | Replaced by *Shipped* and *Delivered* |
+| Refund, cancellation | Off | Replaced by *Cancelled* and *Refund* |
+| Abandoned checkout | On (Shopify) | Needs checkout data the platform does not have; branded in Shopify settings |
+| Customer account emails | Depends on [0002](../decisions/0002-user-identity.md) | If Shopify accounts are used, Shopify sends them |
+
+## Catalog
+
+Each email is one React Email template with Spanish and English versions. The buyer's language is
+the one they bought in (Shopify order `customerLocale`); subscribers keep the language they signed
+up in.
+
+| # | Email | Trigger | Phase | Must contain |
+|---|---|---|---|---|
+| T1 | Order confirmed | State event *01 Paid* | P1 | Order number, poster(s) with thumbnail, variant, amount, shipping address, what happens next (printing, shipping times), that each poster carries a code, link to the account |
+| T2 | In production | State event *03 In production* | P2, optional | "Your copy is being printed", expected ship date |
+| T3 | Shipped | State event *05 Shipped* | P1 (manual state) | Carrier, tracking number, tracking link, estimated delivery |
+| T4 | Delivered, claim your code | State event *06 Delivered* | P2 | The code is active, how to redeem (link to `/redeem`, never the code in the URL), what the cromo is, progress toward the Champion Edition |
+| T5 | Cancelled | State event *Cancelled* | P1 | What was cancelled, refund handled by Shopify and how long it takes |
+| T6 | Refund / return | State event *Return* | P2 | Amount, poster leaves the collection |
+| T7 | Champion Edition unlocked | Collection reaches the unlock count | P2 | That it is free, shipping address confirmation, when it ships |
+| M1 | Confirm your subscription | Email captured on the landing or a product page | P1 | Double opt-in link, what they will receive and how often |
+| M2 | New drop is out | Drop release (Thursday of race week) | P1 | The poster, the race, edition size, link to its product page |
+| M3 | Next drop reminder | Optional, day before release | Later | Date and time, the race |
+
+Rules for content:
+
+1. One purpose per email. The subject says it: *Order #1042 confirmed*, *Your Baku poster has
+   shipped*.
+2. No marketing in transactional emails beyond one line about the next drop.
+3. Codes are never written in an email. T4 links to the account where the code is redeemed.
+4. Every marketing email has a one-click unsubscribe (`List-Unsubscribe` header and a link);
+   transactional emails do not.
+
+## Design
+
+- Same tokens as the landing (colours, type scale, spacing), compiled to inline styles by React
+  Email. Fonts: Inter where supported, Helvetica and Arial fallback.
+- 600 px wide, single column, works in dark mode (no white-on-transparent logos; tested both ways).
+- Images: poster thumbnails at 2× from the platform's image route, with `alt` text. The email must
+  read correctly with images off.
+- A plain-text part generated for every email.
+- One shared layout: header with logo, body, footer with address (required for marketing), help
+  link and, for marketing, unsubscribe.
+
+## Sending
+
+- Triggered by inserting a state event (or a subscriber/drop event), never by polling
+  ([orders.md](orders.md) rule 4).
+- Sent from a background step after the database commit, so a failed send never rolls back the
+  state. Retries with backoff up to 3 times; after that an alert ([tech/stack.md](../tech/stack.md),
+  Observability).
+- Idempotent: Resend's `Idempotency-Key` = `{order_id}:{state}` (or `{subscriber}:{drop}`), so a
+  retried webhook or job never sends twice.
+- Each send is stored: template, locale, recipient, Resend message ID, status updated by Resend's
+  webhooks (`delivered`, `bounced`, `complained`).
+- Hard bounces and complaints suppress the address for marketing. Transactional still goes out
+  unless the address hard-bounced.
+
+## Testing
+
+Owned with M. Isabel Z. Three layers, in this order:
+
+1. **Preview.** `email dev` (React Email) shows every template in both languages with fixture
+   data, including edge cases: three posters in one order, long names, a framed variant, a missing
+   thumbnail. Copy and design are reviewed here first.
+2. **Sandbox sends.** In development and preview environments every email goes to Resend's test
+   addresses (`delivered@resend.dev`, `bounced@resend.dev`, `complained@resend.dev`) or to an
+   allowlist of team inboxes. Real customer addresses are never reachable outside production.
+3. **Client check.** Before launch and whenever the layout changes, one send per template to:
+   Gmail (web, Android), Apple Mail (macOS, iOS), Outlook (web and Windows desktop), in light and
+   dark mode. Checklist per template: subject and preview text, layout, images off, links,
+   plain-text part, unsubscribe where it applies, language.
+
+An end-to-end test on the Shopify development store: place an order → T1 arrives; mark *shipped*
+in the panel (or the admin in P1) → T3 arrives with the tracking link.
+
+## Acceptance criteria (P1)
+
+- [ ] Sending domain verified with SPF, DKIM and DMARC; first emails land in the inbox, not spam,
+      in Gmail and Outlook.
+- [ ] T1, T3, T5, M1 and M2 exist in Spanish and English and pass the client check.
+- [ ] A test order on the development store sends T1 once, even if the webhook arrives twice.
+- [ ] Shopify's order, shipping and cancellation notifications are off in the live store.
+- [ ] Every send is recorded with its Resend status.
+- [ ] Unsubscribing from M2 stops announcements and does not affect order emails.
+
+## Open questions
+
+- Brand domain and inboxes: the sending domain depends on the final name
+  ([0006](../decisions/0006-trademark-registration-in-the-us.md)) and on the official project
+  account.
+- Newsletter: Resend Audiences/Broadcasts, or keep subscribers in the platform's table and send
+  through Resend? Proposal: platform table as the source, Resend Broadcasts for sending.
+- T2 (in production): send it, or does it add noise? Business decides.
+- Do announcements go to every subscriber or only to those who chose a team or driver?

@@ -82,7 +82,7 @@ The state is not overwritten. One event is recorded per change and `current_stat
 
 ## Notifications
 
-Automatic email on every state change visible to the buyer.
+Automatic email on every state change visible to the buyer. Templates, sending and testing are specified in [notifications.md](notifications.md).
 
 | State | Email | Minimum content |
 |---|---|---|
