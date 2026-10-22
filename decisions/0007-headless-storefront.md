@@ -1,6 +1,6 @@
 # 0007 · Headless storefront: product pages in the platform, checkout in Shopify
 
-**Status:** `proposed`
+**Status:** `accepted` (21 October 2026)
 **Owner:** development
 **Deadline:** before P1
 **Blocks:** P1 (product detail, cart)

@@ -17,6 +17,7 @@
 | Album assets | Vercel Blob | Layers per piece, served with long cache |
 | 3D and shaders | Three.js via react-three-fiber + drei | P3 only. Lazy loaded on the album route |
 | Configuration | `vercel.ts` with `@vercel/config` | Typed, crons and headers in a single file |
+| Editorial content | Sanity (via Marketplace), Studio embedded at `/studio` | Posters, drops, artists without a deploy. See [0008](../decisions/0008-content-in-sanity.md) |
 
 ## Technical principles
 
@@ -141,7 +142,6 @@ Managed with `vercel env`. Three environments: development, preview, production.
 | Native app | Everything is web. See [MANIFESTO.md](../MANIFESTO.md) |
 | Blockchain / NFTs | The code is a row in a table |
 | Microservices | Three tables and a log do not justify more than one deployment |
-| External CMS for the landing | Drops and pieces live in the same database. If the creative team needs to edit without code, evaluate in P2 |
 | Redis as a database | Only for rate limiting if needed |
 
 ## When to revisit this document
