@@ -70,6 +70,9 @@ on shipping, removed on cancel or return. There are no codes.
 | M2 | New drop is out | Drop release (Thursday of race week) | P1 | The poster, the race, edition size, link to its product page |
 | M3 | Drop tomorrow | Day before release, to people who asked to be told about that round | P2 | The race, edition size, that it is not reprinted. No art before release |
 | M4 | Close to the Champion Edition | Buyer is one or two shipped posters from the unlock count | P2 | Progress, what the Champion Edition is, the next drop |
+| M5 | Welcome | Right after M1 is confirmed | P1 | How drops work (one per race, Thursday, 300 numbered copies, no reprints), the album, the Champion Edition, link to the season |
+| M6 | Last copies | Once per drop, when stock falls under 10% of the edition | P2 | The poster, copies left, that it is not reprinted. Only to subscribers who don't own it |
+| M7 | More from the season | Ten days after a delivery for buyers; at most monthly for other subscribers | P2 | Up to four released posters with copies left that the reader doesn't own, copies left on each, that each counts toward the Champion Edition |
 
 Rules for content:
 
@@ -77,7 +80,11 @@ Rules for content:
    shipped*.
 2. No marketing in transactional emails beyond one line about the next drop.
 3. Links in emails never carry personal data in the URL; sign-in links carry a one-time token only.
-4. Every marketing email has a one-click unsubscribe (`List-Unsubscribe` header and a link);
+4. Marketing is capped at two emails a week per subscriber, drop announcements included. When M6 or M7
+   would break the cap, it waits or is skipped; M2 always goes out.
+5. Tone: like the team telling a friend who follows the races. Short, warm, concrete; one racing image at
+   most per email. Transactional subjects stay plain so they are found in the inbox.
+6. Every marketing email has a one-click unsubscribe (`List-Unsubscribe` header and a link);
    transactional emails do not.
 
 ## Design
